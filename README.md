@@ -3,7 +3,7 @@
 ![monorail](docs/assets/mascot.png)
 
 Sparrow is a bot runs jobs on Cloud Build events. It subscribes to Cloud Build
-events through the Cloud PubSub topic `cloud-builds, which is available out of
+events through the Cloud PubSub topic `cloud-builds`, which is available out of
 the box.
 
 Sparrow can
@@ -85,7 +85,7 @@ jobs:
   # Run `GitOps` job on events streamed from `project-b`'s Cloud PubSub
   # subscription `gitops`. `GitOps` updates container image tags on kubernetes
   # manifest files.
-  - class: Slack
+  - class: GitOps
     project_id: project-b
     subscription: gitops
     class_args:
