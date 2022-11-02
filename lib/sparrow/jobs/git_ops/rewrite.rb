@@ -62,14 +62,18 @@ module Sparrow
         end
 
         def source_repo_match?
-          cloud_source_repo == @build.repo_name
+          [github_legacy_source_repo, github_app_source_repo].include?(@build.repo_name)
         end
 
-        # TODO(shouichi): Handle other git providers (e.g., bitbucket).
-        def cloud_source_repo
+        def github_legacy_source_repo
           # Cloud Source Repositories downcases org/repo names (e.g., Foo/Bar
           # -> foo_bar).
           "github_#{@source_repo.tr('/', '_')}".downcase
+        end
+
+        def github_app_source_repo
+          # only repo name is given from github app
+          @source_repo.split("/").last
         end
 
         def no_changes?
