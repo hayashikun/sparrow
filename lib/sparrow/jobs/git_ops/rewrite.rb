@@ -17,7 +17,7 @@ module Sparrow
           config_repo:,
           erb_path:,
           out_path:,
-          make_pr:
+          create_pr:
         )
           # rubocop:enable Metrics/ParameterLists
           @build = build
@@ -26,7 +26,7 @@ module Sparrow
           @config_repo = config_repo
           @erb_path = erb_path
           @out_path = out_path
-          @make_pr = make_pr
+          @create_pr = create_pr
         end
 
         def run
@@ -40,7 +40,7 @@ module Sparrow
             return
           end
 
-          push_change
+          create_pr_or_push_master
         end
 
         private
@@ -78,8 +78,8 @@ module Sparrow
           comparison.files.empty?
         end
 
-        def make_pr?
-          @make_pr
+        def create_pr?
+          @create_pr
         end
 
         def pull_requests
@@ -134,34 +134,34 @@ module Sparrow
           end
         end
 
-        def create_pull_request
+        def create_pr
           client.create_pull_request(
             @config_repo,
             "master",
             create_ref.ref,
             title,
             body
-          )
+          ).tap do |pr|
+            logger.info("created a pull request", pr: pr.to_h)
+          end
         end
 
         def push_master
           client.update_ref(@config_repo, branch_name, commit.sha).tap do |ref|
-            logger.debug("update ref", ref: ref.to_h)
+            logger.info("commit and push to master", ref: ref.to_h)
           end
           commit
         end
 
-        def push_change
-          change = make_pr? ? create_pull_request : push_master
-          logger.info("created a #{make_pr? ? 'pull request' : 'commit'}", pr: change.to_h)
-          change
+        def create_pr_or_push_master
+          create_pr? ? create_pr : push_master
         rescue Octokit::UnprocessableEntity => e
           logger.info("pull request or commit exists, skipping", error: e)
           nil
         end
 
         def branch_name
-          make_pr? ? "heads/gitops-#{@build.commit_sha}-#{sanitized_name}" : "heads/master"
+          create_pr? ? "heads/gitops-#{@build.commit_sha}-#{sanitized_name}" : "heads/master"
         end
 
         def sanitized_name
