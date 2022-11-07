@@ -13,7 +13,7 @@ module Sparrow
     #   1. Evaluates the given ERB file.
     #   2. Writes the result to the given output file.
     #   3. Commits the output file.
-    #   4. Creates a pull request or commit to master.
+    #   4. Creates a pull request or pushes to master.
     #
     # It requires the following environment variables.
     #   - GITHUB_TOKEN: github personal access token ("repo" scope)
