@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Sparrow::Jobs::GitOps::Rewrite do
-  shared_examples "rewrite_create_pr" do |json|
+  shared_examples "rewrite_create_pull_request" do |json|
     let(:build) do
       Sparrow::CloudBuild::Build.new(
         JSON.parse(fixture("builds", "branch", "master", json))
@@ -16,7 +16,7 @@ RSpec.describe Sparrow::Jobs::GitOps::Rewrite do
         config_repo: "anipos/sparrow",
         erb_path: "spec/fixtures/git_ops/template.erb",
         out_path: "spec/fixtures/git_ops/rewritten",
-        create_pr: true
+        create_pull_request: true
       )
     end
 
@@ -38,11 +38,11 @@ RSpec.describe Sparrow::Jobs::GitOps::Rewrite do
   end
 
   describe "rewrite and make pr with github_legacy.json" do
-    include_examples "rewrite_create_pr", "github_legacy.json"
+    include_examples "rewrite_create_pull_request", "github_legacy.json"
   end
 
   describe "rewrite and make pr with github_app.json" do
-    include_examples "rewrite_create_pr", "github_app.json"
+    include_examples "rewrite_create_pull_request", "github_app.json"
   end
 
   shared_examples "rewrite_master_push" do |json|
@@ -60,7 +60,7 @@ RSpec.describe Sparrow::Jobs::GitOps::Rewrite do
         config_repo: "anipos/sparrow",
         erb_path: "spec/fixtures/git_ops/template.erb",
         out_path: "spec/fixtures/git_ops/rewritten",
-        create_pr: false
+        create_pull_request: false
       )
     end
 

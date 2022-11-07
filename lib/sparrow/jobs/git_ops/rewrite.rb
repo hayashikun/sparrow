@@ -17,7 +17,7 @@ module Sparrow
           config_repo:,
           erb_path:,
           out_path:,
-          create_pr:
+          create_pull_request:
         )
           # rubocop:enable Metrics/ParameterLists
           @build = build
@@ -26,7 +26,7 @@ module Sparrow
           @config_repo = config_repo
           @erb_path = erb_path
           @out_path = out_path
-          @create_pr = create_pr
+          @create_pull_request = create_pull_request
         end
 
         def run
@@ -40,7 +40,7 @@ module Sparrow
             return
           end
 
-          create_pr_or_push_master
+          create_pull_request_or_push_master
         end
 
         private
@@ -78,8 +78,8 @@ module Sparrow
           comparison.files.empty?
         end
 
-        def create_pr?
-          @create_pr
+        def create_pull_request?
+          @create_pull_request
         end
 
         def pull_requests
@@ -134,7 +134,7 @@ module Sparrow
           end
         end
 
-        def create_pr
+        def create_pull_request
           client.create_pull_request(
             @config_repo,
             "master",
@@ -153,15 +153,15 @@ module Sparrow
           commit
         end
 
-        def create_pr_or_push_master
-          create_pr? ? create_pr : push_master
+        def create_pull_request_or_push_master
+          create_pull_request? ? create_pull_request : push_master
         rescue Octokit::UnprocessableEntity => e
           logger.info("pull request or commit exists, skipping", error: e)
           nil
         end
 
         def branch_name
-          create_pr? ? "heads/gitops-#{@build.commit_sha}-#{sanitized_name}" : "heads/master"
+          create_pull_request? ? "heads/gitops-#{@build.commit_sha}-#{sanitized_name}" : "heads/master"
         end
 
         def sanitized_name
