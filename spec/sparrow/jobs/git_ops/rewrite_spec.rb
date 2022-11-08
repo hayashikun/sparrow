@@ -16,7 +16,7 @@ RSpec.describe Sparrow::Jobs::GitOps::Rewrite do
         config_repo: "anipos/sparrow",
         erb_path: "spec/fixtures/git_ops/template.erb",
         out_path: "spec/fixtures/git_ops/rewritten",
-        create_pull_request: true
+        bypass_pull_request: false
       )
     end
 
@@ -60,7 +60,7 @@ RSpec.describe Sparrow::Jobs::GitOps::Rewrite do
         config_repo: "anipos/sparrow",
         erb_path: "spec/fixtures/git_ops/template.erb",
         out_path: "spec/fixtures/git_ops/rewritten",
-        create_pull_request: false
+        bypass_pull_request: true
       )
     end
 

@@ -51,7 +51,7 @@ module Sparrow
             erb_path: rewrite["erb_path"],
             out_path: rewrite["out_path"],
             # if not specified, it makes PR.
-            create_pull_request: rewrite["create_pull_request"] || true
+            bypass_pull_request: rewrite["bypass_pull_request"] || true
           )
         end
       end

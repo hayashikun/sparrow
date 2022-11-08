@@ -17,7 +17,7 @@ module Sparrow
           config_repo:,
           erb_path:,
           out_path:,
-          create_pull_request:
+          bypass_pull_request:
         )
           # rubocop:enable Metrics/ParameterLists
           @build = build
@@ -26,7 +26,7 @@ module Sparrow
           @config_repo = config_repo
           @erb_path = erb_path
           @out_path = out_path
-          @create_pull_request = create_pull_request
+          @bypass_pull_request = bypass_pull_request
         end
 
         def run
@@ -78,8 +78,8 @@ module Sparrow
           comparison.files.empty?
         end
 
-        def create_pull_request?
-          @create_pull_request
+        def bypass_pull_request?
+          @bypass_pull_request
         end
 
         def pull_requests
@@ -154,14 +154,14 @@ module Sparrow
         end
 
         def create_pull_request_or_push_master
-          create_pull_request? ? create_pull_request : push_master
+          bypass_pull_request? ? push_master : create_pull_request
         rescue Octokit::UnprocessableEntity => e
           logger.info("pull request or commit exists, skipping", error: e)
           nil
         end
 
         def branch_name
-          create_pull_request? ? "heads/gitops-#{@build.commit_sha}-#{sanitized_name}" : "heads/master"
+          bypass_pull_request? ? "heads/master" : "heads/gitops-#{@build.commit_sha}-#{sanitized_name}"
         end
 
         def sanitized_name
