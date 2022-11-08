@@ -26,4 +26,4 @@ jobs:
             - name: dev
               erb_path: overlays/dev/deploy.yaml.erb
               out_path: overlays/dev/deploy.yaml
-              create_pull_request: true
+              bypass_pull_request: false

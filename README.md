@@ -51,6 +51,10 @@ When a commit is pushed to the code repository's master branch,
 1. The event is published to Cloud PubSub.
 1. Sparrow rewrites the tag in the config repository and creates a pull request or pushes the change to the master branch.
 
+It should be noted that if you want to bypass creating pull requests and push to the master branch directly,
+the branch protection rule needs to be configured correctly that allows bypassing pull requests.
+https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule
+
 For now, Sparrow supports the GitHub repositories connected to the Cloud Build
 via GitHub App or through Cloud Source Repositories.
 
@@ -103,8 +107,8 @@ jobs:
             - name: dev
               erb_path: overlays/dev/kustomization.yaml.erb
               out_path: overlays/dev/kustomization.yaml
-              # If set to true, a PR is created. (default: true)
-              create_pull_request: true
+              # If set to true, changes are pushed to master branch directly. (default: false)
+              bypass_pull_request: true
 ```
 
 ## Deployment
